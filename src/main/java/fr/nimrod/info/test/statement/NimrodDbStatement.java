@@ -22,6 +22,7 @@ import org.dbunit.dataset.DataSetException;
 import org.dbunit.dataset.FilteredDataSet;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
+import org.dbunit.dataset.SortedTable;
 import org.dbunit.dataset.filter.DefaultColumnFilter;
 import org.dbunit.operation.DatabaseOperation;
 import org.junit.Assert;
@@ -122,8 +123,8 @@ public class NimrodDbStatement extends Statement {
 	private void verify(DataExpected dataExpected) throws SQLException, DatabaseUnitException {
 		boolean flagFail = false;
 		DatabaseDataSourceConnection databaseDataSourceConnection = new DatabaseDataSourceConnection(dataSource);
-		ITable tableActual = databaseDataSourceConnection.createQueryTable(dataExpected.tableName(), "select * from " + dataExpected.tableName() + " order by " + dataExpected.orderBy());
-		ITable tableExpected = DataSetStrategy.getImplementation(dataExpected.file(), resourceBase).getTable(dataExpected.tableName());
+		ITable tableActual = new SortedTable(databaseDataSourceConnection.createQueryTable(dataExpected.tableName(), "select * from " + dataExpected.tableName()));
+		ITable tableExpected = new SortedTable(DataSetStrategy.getImplementation(dataExpected.file(), resourceBase).getTable(dataExpected.tableName()));
 
 		if (dataExpected.ignoredColumn().length > 0){
 			tableActual = DefaultColumnFilter.excludedColumnsTable(tableActual, dataExpected.ignoredColumn());

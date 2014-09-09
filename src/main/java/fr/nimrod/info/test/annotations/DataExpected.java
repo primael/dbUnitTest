@@ -10,6 +10,5 @@ import java.lang.annotation.Target;
 public @interface DataExpected {
 	String file();
 	String tableName();
-	String orderBy();
 	String[] ignoredColumn() default {};
 }
