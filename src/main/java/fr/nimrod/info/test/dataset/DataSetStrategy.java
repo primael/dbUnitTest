@@ -10,7 +10,7 @@ import fr.nimrod.info.test.dataset.implementation.JsonDataSet;
 public interface DataSetStrategy {
 
 	@SneakyThrows
-	static AbstractDataSet getImplementation(String file, Class<?> resourceBase) throws IllegalStateException {
+	static AbstractDataSet getImplementation(String file, Class<?> resourceBase) {
 		if(file.endsWith(".json")){
 			return new JsonDataSet(resourceBase.getResourceAsStream(file));
 		}

@@ -104,7 +104,7 @@ public class NimrodDbStatement extends Statement {
 	 * @throws SQLException
 	 * @throws DatabaseUnitException
 	 */
-	private void perform(Data data) throws DataSetException, SQLException, DatabaseUnitException {
+	private void perform(Data data) throws SQLException, DatabaseUnitException {
 		log.debug("Decouverte d'une demande d'ajout de données");
 		String[] dataSetFiles = data.value();
 		List<IDataSet> dataSets = new ArrayList<IDataSet>(dataSetFiles.length);
@@ -123,25 +123,27 @@ public class NimrodDbStatement extends Statement {
 	private void verify(DataExpected dataExpected) throws SQLException, DatabaseUnitException {
 		boolean flagFail = false;
 		DatabaseDataSourceConnection databaseDataSourceConnection = new DatabaseDataSourceConnection(dataSource);
-		SortedTable sortedTableActual = new SortedTable(databaseDataSourceConnection.createQueryTable(dataExpected.tableName(), "select * from " + dataExpected.tableName()));
+		SortedTable sortedTableActual = new SortedTable(databaseDataSourceConnection.createQueryTable(
+				dataExpected.tableName(), "select * from " + dataExpected.tableName()));
 		sortedTableActual.setUseComparable(true);
-		SortedTable sortedTableExpected = new SortedTable(DataSetStrategy.getImplementation(dataExpected.file(), resourceBase).getTable(dataExpected.tableName()));
+		SortedTable sortedTableExpected = new SortedTable(DataSetStrategy.getImplementation(dataExpected.file(),
+				resourceBase).getTable(dataExpected.tableName()));
 		sortedTableExpected.setUseComparable(true);
-		
+
 		ITable tableActual = sortedTableActual;
 		ITable tableExpected = sortedTableExpected;
-		if (dataExpected.ignoredColumn().length > 0){
+		if (dataExpected.ignoredColumn().length > 0) {
 			tableActual = DefaultColumnFilter.excludedColumnsTable(sortedTableActual, dataExpected.ignoredColumn());
-			tableExpected =  DefaultColumnFilter.excludedColumnsTable(sortedTableExpected, dataExpected.ignoredColumn());
+			tableExpected = DefaultColumnFilter.excludedColumnsTable(sortedTableExpected, dataExpected.ignoredColumn());
 		}
-		
+
 		DiffCollectingFailureHandler diffCollectingHandler = new DiffCollectingFailureHandler();
-		
+
 		Assertion.assertEquals(tableExpected, tableActual, diffCollectingHandler);
-		
+
 		@SuppressWarnings("unchecked")
 		List<Difference> diffList = diffCollectingHandler.getDiffList();
-		for(Difference difference : diffList){
+		for (Difference difference : diffList) {
 			flagFail = true;
 			StringBuilder message = new StringBuilder();
 			message.append("Difference trouvé sur l'enregistrement n°" + (difference.getRowIndex() + 1));
@@ -150,9 +152,9 @@ public class NimrodDbStatement extends Statement {
 			message.append(" valeur trouvée " + difference.getActualValue());
 			log.error(message.toString());
 		}
-		
-		if(flagFail){
+
+		if (flagFail) {
 			Assert.fail();
 		}
 	}
-} 
+}

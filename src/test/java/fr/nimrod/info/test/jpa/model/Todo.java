@@ -6,7 +6,7 @@ import lombok.Data;
 public class Todo {
 
 	private String summary;
-	
+
 	private String description;
-	
+
 }
