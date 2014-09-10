@@ -34,7 +34,7 @@ import com.google.common.io.Resources;
 import fr.nimrod.info.test.annotations.Data;
 import fr.nimrod.info.test.annotations.DataExpected;
 import fr.nimrod.info.test.annotations.Schema;
-import fr.nimrod.info.test.dataSet.DataSetStrategy;
+import fr.nimrod.info.test.dataset.DataSetStrategy;
 
 @Log4j2
 @AllArgsConstructor
@@ -143,7 +143,7 @@ public class NimrodDbStatement extends Statement {
 		List<Difference> diffList = diffCollectingHandler.getDiffList();
 		for(Difference difference : diffList){
 			flagFail = true;
-			StringBuffer message = new StringBuffer();
+			StringBuilder message = new StringBuilder();
 			message.append("Difference trouvé sur l'enregistrement n°" + (difference.getRowIndex() + 1));
 			message.append(" sur la colonne " + difference.getColumnName());
 			message.append(" valeur attendue " + difference.getExpectedValue());

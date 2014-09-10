@@ -12,7 +12,6 @@ import fr.nimrod.info.test.statement.NimrodDbStatement;
 public class NimrodDbRule implements MethodRule {
 
 	private Class<?> resourceBase;
-//	private IDatabaseConnection dbUnitConnection;
 	private BasicDataSource dataSource;
 
 	@SneakyThrows
@@ -31,12 +30,5 @@ public class NimrodDbRule implements MethodRule {
 	public Statement apply(final Statement base, final FrameworkMethod method, final Object target) {
 		return new NimrodDbStatement(method, base, resourceBase, dataSource);
 	}
-	
-//	public IDataSet jsonDataSet(String datasetResource) {
-//		return new JsonDataSet(resourceBase.getResourceAsStream(datasetResource));
-//	}
 
-//	public ITable createQueryTable(String string, String string2) throws DataSetException, SQLException {
-//		return dbUnitConnection.createQueryTable(string, string2);
-//	}
 }

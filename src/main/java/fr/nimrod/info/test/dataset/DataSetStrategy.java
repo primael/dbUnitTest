@@ -1,11 +1,11 @@
-package fr.nimrod.info.test.dataSet;
+package fr.nimrod.info.test.dataset;
 
 import lombok.SneakyThrows;
 
 import org.dbunit.dataset.AbstractDataSet;
 import org.dbunit.dataset.xml.FlatXmlDataSetBuilder;
 
-import fr.nimrod.info.test.dataSet.implementation.JsonDataSet;
+import fr.nimrod.info.test.dataset.implementation.JsonDataSet;
 
 public interface DataSetStrategy {
 

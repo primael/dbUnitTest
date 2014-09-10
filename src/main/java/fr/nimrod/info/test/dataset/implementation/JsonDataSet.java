@@ -1,4 +1,4 @@
-package fr.nimrod.info.test.dataSet.implementation;
+package fr.nimrod.info.test.dataset.implementation;
 
 import org.codehaus.jackson.map.ObjectMapper;
 
@@ -128,7 +128,7 @@ public class JsonDataSet extends AbstractDataSet {
 		 */
 		@SuppressWarnings("unchecked")
 		public List<ITable> getTables(InputStream jsonStream) {
-			List<ITable> tables = new ArrayList<ITable>();
+			List<ITable> listTables = new ArrayList<ITable>();
 			try {
 				// get the base object tree from the JSON stream
 				Map<String, Object> dataset = mapper.readValue(jsonStream,
@@ -147,13 +147,13 @@ public class JsonDataSet extends AbstractDataSet {
 						fillRow(table, row, rowIndex++);
 					}
 					// add the table to the list of DBUnit tables
-					tables.add(table);
+					listTables.add(table);
 				}
 
 			} catch (IOException e) {
 				throw new RuntimeException(e.getMessage(), e);
 			}
-			return tables;
+			return listTables;
 		}
 
 		/**
