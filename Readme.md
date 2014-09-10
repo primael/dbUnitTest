@@ -1,15 +1,15 @@
 DbUnitTest
 ==========
-Par Primaël BRUANT.
+Par PrimaÃ«l BRUANT.
 
 Version au 07/09/2014.
 
-Ce document présente la façon d'utiliser __DbUnitTest__ pour gérer et créer des tests. 
+Ce document prÃ©sente la faÃ§on d'utiliser __DbUnitTest__ pour gÃ©rer et crÃ©er des tests. 
 
 Installation avec maven
 -----------------------
-###Pré-requis###
-Avoir installer DbUnitTest dans son répository local.
+###PrÃ©-requis###
+Avoir installer DbUnitTest dans son rÃ©pository local.
 ###Installation dans un projet###
  ```xml
  <dependency>
@@ -20,7 +20,7 @@ Avoir installer DbUnitTest dans son répository local.
 </dependency>
 ```
 ###Utilisation dans un test###
-Vous devez dans un premier temps déclarer dans votre test le @Rule Junit4:
+Vous devez dans un premier temps dÃ©clarer dans votre test le @Rule Junit4:
 ```java
 
 	@Rule
@@ -28,15 +28,15 @@ Vous devez dans un premier temps déclarer dans votre test le @Rule Junit4:
 			__URL de connexion__, __utilisateur__, __password__);
 ```
 
-Ensuite sur vos méthode de test, ajouter les annotations :
+Ensuite sur vos mÃ©thode de test, ajouter les annotations :
 
- - [@Schema](#schema) => Pour l'éxecution d'un script
- - [@Data](#data) => Pour l'insertion d'un jeu de données (supporte actuellement le format JSON et XML)
- - [@DataExpected](#dataexpected) => Pour la vérification entre les données obtenues et les données attendues.
+ - [@Schema](#schema) => Pour l'Ã©xecution d'un script
+ - [@Data](#data) => Pour l'insertion d'un jeu de donnÃ©es (supporte actuellement le format JSON et XML)
+ - [@DataExpected](#dataexpected) => Pour la vÃ©rification entre les donnÃ©es obtenues et les donnÃ©es attendues.
  
 ### @Schema ###
  
-Annotation permettant l'import d'un script sql (ie. la création d'une table)
+Annotation permettant l'import d'un script sql (ie. la crÃ©ation d'une table)
  
 ```java
  	@Schema({"utilisateur.sql", "role.sql"})
@@ -44,19 +44,19 @@ Annotation permettant l'import d'un script sql (ie. la création d'une table)
  
 ### @Data ###
  
- Annotation permettant l'ajout de données.
+ Annotation permettant l'ajout de donnÃ©es.
  
 ```java
  	@Data({"utilisateur.xml", "role.json"})
 ```
- Actuellement seul les formats json et xml sont supportés.
+ Actuellement seul les formats json et xml sont supportÃ©s.
  
 ### @DataExpected ###
  
-Annotation permettant de valider la bonne modification des données.
+Annotation permettant de valider la bonne modification des donnÃ©es.
  
  ```java
- 	@DataExpected(file="/user-expected.json", tableName="utilisateur", orderBy="identifiant", ignoredColumn={"hash","salt"} )
+ 	@DataExpected(file="/user-expected.json", tableName="utilisateur", ignoredColumn={"hash","salt"} )
 ```
 
 Lancer votre test, that's it!
