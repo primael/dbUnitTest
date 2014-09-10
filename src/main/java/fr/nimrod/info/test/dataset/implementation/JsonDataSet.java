@@ -1,15 +1,18 @@
 package fr.nimrod.info.test.dataset.implementation;
 
 import org.codehaus.jackson.map.ObjectMapper;
-
 import org.dbunit.dataset.*;
 import org.dbunit.dataset.datatype.DataType;
+
+import fr.nimrod.info.test.exceptions.DbUnitTestException;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.*;
+
+import lombok.SneakyThrows;
 
 /**
  * DBUnit DataSet format for JSON based datasets. It is similar to the flat XML
@@ -110,11 +113,12 @@ public class JsonDataSet extends AbstractDataSet {
 		 *            A JSON dataset file
 		 * @return A list of DBUnit tables
 		 */
+		@SneakyThrows
 		public List<ITable> getTables(File jsonFile) {
 			try {
 				return getTables(new FileInputStream(jsonFile));
 			} catch (IOException e) {
-				throw new RuntimeException(e.getMessage(), e);
+				throw new DbUnitTestException(e.getMessage(), e);
 			}
 		}
 
@@ -126,6 +130,7 @@ public class JsonDataSet extends AbstractDataSet {
 		 *            A JSON dataset input stream
 		 * @return A list of DBUnit tables
 		 */
+		@SneakyThrows
 		@SuppressWarnings("unchecked")
 		public List<ITable> getTables(InputStream jsonStream) {
 			List<ITable> listTables = new ArrayList<ITable>();
@@ -151,7 +156,7 @@ public class JsonDataSet extends AbstractDataSet {
 				}
 
 			} catch (IOException e) {
-				throw new RuntimeException(e.getMessage(), e);
+				throw new DbUnitTestException(e.getMessage(), e);
 			}
 			return listTables;
 		}
@@ -193,6 +198,7 @@ public class JsonDataSet extends AbstractDataSet {
 		 * @param rowIndex
 		 *            The index of the row to te filled
 		 */
+		@SneakyThrows
 		private void fillRow(DefaultTable table, Map<String, Object> row,
 				int rowIndex) {
 			try {
@@ -203,7 +209,7 @@ public class JsonDataSet extends AbstractDataSet {
 
 				}
 			} catch (Exception e) {
-				throw new RuntimeException(e.getMessage(), e);
+				throw new DbUnitTestException(e.getMessage(), e);
 			}
 		}
 	}
