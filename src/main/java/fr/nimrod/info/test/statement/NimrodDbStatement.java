@@ -123,12 +123,16 @@ public class NimrodDbStatement extends Statement {
 	private void verify(DataExpected dataExpected) throws SQLException, DatabaseUnitException {
 		boolean flagFail = false;
 		DatabaseDataSourceConnection databaseDataSourceConnection = new DatabaseDataSourceConnection(dataSource);
-		ITable tableActual = new SortedTable(databaseDataSourceConnection.createQueryTable(dataExpected.tableName(), "select * from " + dataExpected.tableName()));
-		ITable tableExpected = new SortedTable(DataSetStrategy.getImplementation(dataExpected.file(), resourceBase).getTable(dataExpected.tableName()));
-
+		SortedTable sortedTableActual = new SortedTable(databaseDataSourceConnection.createQueryTable(dataExpected.tableName(), "select * from " + dataExpected.tableName()));
+		sortedTableActual.setUseComparable(true);
+		SortedTable sortedTableExpected = new SortedTable(DataSetStrategy.getImplementation(dataExpected.file(), resourceBase).getTable(dataExpected.tableName()));
+		sortedTableExpected.setUseComparable(true);
+		
+		ITable tableActual = sortedTableActual;
+		ITable tableExpected = sortedTableExpected;
 		if (dataExpected.ignoredColumn().length > 0){
-			tableActual = DefaultColumnFilter.excludedColumnsTable(tableActual, dataExpected.ignoredColumn());
-			tableExpected = DefaultColumnFilter.excludedColumnsTable(tableExpected, dataExpected.ignoredColumn());
+			tableActual = DefaultColumnFilter.excludedColumnsTable(sortedTableActual, dataExpected.ignoredColumn());
+			tableExpected =  DefaultColumnFilter.excludedColumnsTable(sortedTableExpected, dataExpected.ignoredColumn());
 		}
 		
 		DiffCollectingFailureHandler diffCollectingHandler = new DiffCollectingFailureHandler();
