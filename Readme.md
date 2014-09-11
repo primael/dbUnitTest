@@ -65,7 +65,8 @@ Annotation permettant de valider la bonne modification des données.
  @DataExpected:
  attributs obligatoires:
  - file : prend pour valeur le de données a validés (données attendues).
- - tableName : la table concernées par le test
+ - tableName : la table concernées par le test.
+
  attribut optionnel:
  - ignoredColumn : les colonnes ignorés lors de la comparaison.
  
