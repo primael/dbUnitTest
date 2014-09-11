@@ -42,6 +42,8 @@ Annotation permettant l'import d'un script sql (ie. la création d'une table)
  	@Schema({"utilisateur.sql", "role.sql"})
 ```
  
+ @Schema prend pour valeur le ou les fichiers sql a chargés.
+ 
 ### @Data ###
  
  Annotation permettant l'ajout de données.
@@ -49,6 +51,8 @@ Annotation permettant l'import d'un script sql (ie. la création d'une table)
 ```java
  	@Data({"utilisateur.xml", "role.json"})
 ```
+
+ @Data prend pour valeur le ou les fichiers de données a chargés. 
  Actuellement seul les formats json et xml sont supportés.
  
 ### @DataExpected ###
@@ -58,5 +62,11 @@ Annotation permettant de valider la bonne modification des données.
  ```java
  	@DataExpected(file="/user-expected.json", tableName="utilisateur", ignoredColumn={"hash","salt"} )
 ```
-
+ @DataExpected:
+ attributs obligatoires:
+ - file : prend pour valeur le de données a validés (données attendues).
+ - tableName : la table concernées par le test
+ attribut optionnel:
+ - ignoredColumn : les colonnes ignorés lors de la comparaison.
+ 
 Lancer votre test, that's it!
