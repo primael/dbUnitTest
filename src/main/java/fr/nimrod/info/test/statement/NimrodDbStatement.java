@@ -144,15 +144,8 @@ public class NimrodDbStatement extends Statement {
 
 		@SuppressWarnings("unchecked")
 		List<Difference> diffList = diffCollectingHandler.getDiffList();
-		for (Difference difference : diffList) {
-			flagFail = true;
-			StringBuilder message = new StringBuilder();
-			message.append("Difference trouvé sur l'enregistrement n°" + (difference.getRowIndex() + 1));
-			message.append(" sur la colonne " + difference.getColumnName());
-			message.append(" valeur attendue " + difference.getExpectedValue());
-			message.append(" valeur trouvée " + difference.getActualValue());
-			log.error(message.toString());
-		}
+		
+		diffList.stream().forEach(difference -> log.error(difference));
 
 		if (flagFail) {
 			Assert.fail();
