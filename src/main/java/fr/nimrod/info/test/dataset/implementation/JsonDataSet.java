@@ -101,7 +101,7 @@ public class JsonDataSet extends AbstractDataSet {
 				tables.toArray(new ITable[tables.size()]));
 	}
 
-	private class JSONITableParser {
+	private static class JSONITableParser {
 
 		private ObjectMapper mapper = new ObjectMapper();
 
