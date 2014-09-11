@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
+import lombok.Cleanup;
 import lombok.extern.log4j.Log4j2;
 
 import org.apache.commons.dbcp.BasicDataSource;
@@ -74,7 +75,7 @@ public class NimrodDbStatement extends Statement {
 	}
 
 	/**
-	 * Methode permettant de jouer un ou des scripts sql passé en parametre.
+	 * Methode permettant de jouer un ou des scripts sql passÃ© en parametre.
 	 * 
 	 * @param ddl
 	 *            l'annotation
@@ -87,9 +88,9 @@ public class NimrodDbStatement extends Statement {
 			log.debug("Decouverte d'une demande de script d'execution : " + value);
 			String sql = Resources.toString(resourceBase.getResource(value), Charset.defaultCharset());
 
-			Connection connection = dataSource.getConnection();
+			@Cleanup Connection connection = dataSource.getConnection();
 
-			java.sql.Statement statement = connection.createStatement();
+			@Cleanup java.sql.Statement statement = connection.createStatement();
 
 			statement.executeQuery(sql);
 			log.debug("Fin de l'execution du script");
@@ -97,7 +98,7 @@ public class NimrodDbStatement extends Statement {
 	}
 
 	/**
-	 * Méthode permettant d'injecter des données dans le schéma
+	 * MÃ©thode permettant d'injecter des donnÃ©es dans le schÃ©ma
 	 * 
 	 * @param data
 	 * @throws DataSetException
@@ -105,11 +106,11 @@ public class NimrodDbStatement extends Statement {
 	 * @throws DatabaseUnitException
 	 */
 	private void perform(Data data) throws SQLException, DatabaseUnitException {
-		log.debug("Decouverte d'une demande d'ajout de données");
+		log.debug("Decouverte d'une demande d'ajout de donnÃ©es");
 		String[] dataSetFiles = data.value();
 		List<IDataSet> dataSets = new ArrayList<IDataSet>(dataSetFiles.length);
 		for (String dataSetFile : dataSetFiles) {
-			log.debug("Ajout des données : " + dataSetFile);
+			log.debug("Ajout des donnÃ©es : " + dataSetFile);
 			IDataSet ds = DataSetStrategy.getImplementation(dataSetFile, resourceBase);
 			dataSets.add(ds);
 		}
@@ -117,7 +118,7 @@ public class NimrodDbStatement extends Statement {
 		DatabaseDataSourceConnection databaseDataSourceConnection = new DatabaseDataSourceConnection(dataSource);
 		IDataSet fkDataSet = new FilteredDataSet(new DatabaseSequenceFilter(databaseDataSourceConnection), dataSet);
 		DatabaseOperation.INSERT.execute(databaseDataSourceConnection, fkDataSet);
-		log.debug("Ajout des données effectuées.");
+		log.debug("Ajout des donnÃ©es effectuÃ©es.");
 	}
 
 	private void verify(DataExpected dataExpected) throws SQLException, DatabaseUnitException {
@@ -146,10 +147,10 @@ public class NimrodDbStatement extends Statement {
 		for (Difference difference : diffList) {
 			flagFail = true;
 			StringBuilder message = new StringBuilder();
-			message.append("Difference trouvé sur l'enregistrement n°" + (difference.getRowIndex() + 1));
+			message.append("Difference trouvÃ© sur l'enregistrement nÂ°" + (difference.getRowIndex() + 1));
 			message.append(" sur la colonne " + difference.getColumnName());
 			message.append(" valeur attendue " + difference.getExpectedValue());
-			message.append(" valeur trouvée " + difference.getActualValue());
+			message.append(" valeur trouvÃ©e " + difference.getActualValue());
 			log.error(message.toString());
 		}
 
