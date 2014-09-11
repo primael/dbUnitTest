@@ -1,5 +1,6 @@
 package fr.nimrod.info.test.rule;
 
+import lombok.Getter;
 import lombok.SneakyThrows;
 
 import org.apache.commons.dbcp.BasicDataSource;
@@ -12,6 +13,8 @@ import fr.nimrod.info.test.statement.NimrodDbStatement;
 public class NimrodDbRule implements MethodRule {
 
 	private Class<?> resourceBase;
+	
+	@Getter
 	private BasicDataSource dataSource;
 
 	@SneakyThrows
@@ -30,5 +33,4 @@ public class NimrodDbRule implements MethodRule {
 	public Statement apply(final Statement base, final FrameworkMethod method, final Object target) {
 		return new NimrodDbStatement(method, base, resourceBase, dataSource);
 	}
-
 }

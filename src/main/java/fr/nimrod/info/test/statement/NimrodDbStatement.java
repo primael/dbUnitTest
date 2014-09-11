@@ -85,7 +85,7 @@ public class NimrodDbStatement extends Statement {
 	private void perform(Schema ddl) throws IOException, SQLException {
 		String[] values = ddl.value();
 		for (String value : values) {
-			log.debug("Decouverte d'une demande de script d'execution : " + value);
+			log.debug("Discovery of a request for script execution : " + value);
 			String sql = Resources.toString(resourceBase.getResource(value), Charset.defaultCharset());
 
 			@Cleanup Connection connection = dataSource.getConnection();
@@ -93,12 +93,12 @@ public class NimrodDbStatement extends Statement {
 			@Cleanup java.sql.Statement statement = connection.createStatement();
 
 			statement.executeQuery(sql);
-			log.debug("Fin de l'execution du script");
+			log.debug("End of script execution");
 		}
 	}
 
 	/**
-	 * Méthode permettant d'injecter des données dans le schéma
+	 * Méthode permettant d'injecter des donnees dans le schema
 	 * 
 	 * @param data
 	 * @throws DataSetException
@@ -106,11 +106,11 @@ public class NimrodDbStatement extends Statement {
 	 * @throws DatabaseUnitException
 	 */
 	private void perform(Data data) throws SQLException, DatabaseUnitException {
-		log.debug("Decouverte d'une demande d'ajout de données");
+		log.debug("Discovery of a request to add data");
 		String[] dataSetFiles = data.value();
 		List<IDataSet> dataSets = new ArrayList<IDataSet>(dataSetFiles.length);
 		for (String dataSetFile : dataSetFiles) {
-			log.debug("Ajout des données : " + dataSetFile);
+			log.debug("Add data : " + dataSetFile);
 			IDataSet ds = DataSetStrategy.getImplementation(dataSetFile, resourceBase);
 			dataSets.add(ds);
 		}
@@ -118,7 +118,7 @@ public class NimrodDbStatement extends Statement {
 		DatabaseDataSourceConnection databaseDataSourceConnection = new DatabaseDataSourceConnection(dataSource);
 		IDataSet fkDataSet = new FilteredDataSet(new DatabaseSequenceFilter(databaseDataSourceConnection), dataSet);
 		DatabaseOperation.INSERT.execute(databaseDataSourceConnection, fkDataSet);
-		log.debug("Ajout des données effectuées.");
+		log.debug("Add data done.");
 	}
 
 	private void verify(DataExpected dataExpected) throws SQLException, DatabaseUnitException {
