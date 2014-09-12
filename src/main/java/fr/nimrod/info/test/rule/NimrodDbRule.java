@@ -1,9 +1,12 @@
 package fr.nimrod.info.test.rule;
 
+import java.util.UUID;
+
 import lombok.Getter;
 import lombok.SneakyThrows;
 
 import org.apache.commons.dbcp.BasicDataSource;
+import org.hsqldb.jdbcDriver;
 import org.junit.rules.MethodRule;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.Statement;
