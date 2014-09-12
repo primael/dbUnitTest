@@ -52,7 +52,7 @@ public class TodoDaoTest {
 	@Test
 	@Schema({"/jdbc/todo/todo.sql"})
 	@Data({"/jdbc/todo/todo.json"})
-	@DataExpected(file="/jdbc/todo/todos-expected.json", tableName="todo")
+	@DataExpected(file="/jdbc/todo/todo-expected.xml", tableName="todo")
 	public void createTodoWithDataInject() throws SQLException{
 		Todo todo = new Todo();
 		todo.setIdentifiant(1l);
