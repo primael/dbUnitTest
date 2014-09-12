@@ -17,6 +17,14 @@ public class NimrodDbRule implements MethodRule {
 	@Getter
 	private BasicDataSource dataSource;
 
+	private static final Class<?> DRIVER = jdbcDriver.class;
+	
+	private static final String URL = "jdbc:hsqldb:mem:" + UUID.randomUUID();
+	
+	private static final String USERNAME = "sa";
+	
+	private static final String PASSWORD = "";
+	
 	@SneakyThrows
 	public NimrodDbRule(Class<?> resourceBase, Class<?> driver, String url, String user, String password) {
 
@@ -29,6 +37,10 @@ public class NimrodDbRule implements MethodRule {
 		this.resourceBase = resourceBase;
 	}
 
+	public NimrodDbRule(Class<?> resourceBase) {
+		this(resourceBase, DRIVER, URL, USERNAME, PASSWORD);
+	}
+	
 	@Override
 	public Statement apply(final Statement base, final FrameworkMethod method, final Object target) {
 		return new NimrodDbStatement(method, base, resourceBase, dataSource);
