@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import fr.nimrod.info.test.annotations.Data;
 import fr.nimrod.info.test.annotations.DataExpected;
+import fr.nimrod.info.test.annotations.Datas;
 import fr.nimrod.info.test.annotations.Schema;
 import fr.nimrod.info.test.rule.NimrodDbRule;
 import fr.nimrod.info.test.sample.purejdbc.model.Todo;
@@ -51,7 +52,11 @@ public class TodoDaoTest {
 	
 	@Test
 	@Schema({"/jdbc/todo/todo.sql"})
-	@Data({"/jdbc/todo/todo.json"})
+	
+	@Datas(
+		@Data("/jdbc/todo/todo.json")
+	)
+	
 	@DataExpected(file="/jdbc/todo/todo-expected.xml", tableName="todo")
 	public void createTodoWithDataInject() throws SQLException{
 		Todo todo = new Todo();
@@ -64,7 +69,9 @@ public class TodoDaoTest {
 	
 	@Test
 	@Schema({"/jdbc/todo/todo.sql"})
-	@Data({})
+	@Datas(
+		@Data("")
+	)
 	@DataExpected(file="/jdbc/todo/todo-expected.json", tableName="todo")
 	public void createTodoWithDataEmptyInject() throws SQLException{
 		Todo todo = new Todo();
@@ -74,4 +81,32 @@ public class TodoDaoTest {
 		
 		instanceUnderTest.persistTodo(todo);
 	}
+	
+	@Test
+	@Schema({"/jdbc/todo/todo.sql"})
+	@Datas({
+		@Data(""),
+		@Data("/jdbc/todo/todo.json")
+	})
+	@DataExpected(file="/jdbc/todo/todo-expected.xml", tableName="todo")
+	public void createTodoWithOneDataEmptyAndOneDataInject() throws SQLException{
+		Todo todo = new Todo();
+		todo.setIdentifiant(1l);
+		todo.setSummary("test");
+		todo.setDescription("test corps");
+		
+		instanceUnderTest.persistTodo(todo);
+	}
+	
+	/*@Test(expected=DbUnitParameterizedException.class)
+	@Schema({"/jdbc/todo/todo.sql"})
+	@DataExpected(file="", tableName="todo")
+	public void createTodoWithDataExpectedFileEmptyInject() throws SQLException{
+		Todo todo = new Todo();
+		todo.setIdentifiant(1l);
+		todo.setSummary("test");
+		todo.setDescription("test corps");
+		
+		instanceUnderTest.persistTodo(todo);
+	}*/
 }

@@ -34,8 +34,10 @@ import com.google.common.io.Resources;
 
 import fr.nimrod.info.test.annotations.Data;
 import fr.nimrod.info.test.annotations.DataExpected;
+import fr.nimrod.info.test.annotations.Datas;
 import fr.nimrod.info.test.annotations.Schema;
 import fr.nimrod.info.test.dataset.DataSetStrategy;
+import fr.nimrod.info.test.exceptions.DbUnitParameterizedException;
 
 @Log4j2
 @AllArgsConstructor
@@ -57,9 +59,9 @@ public class NimrodDbStatement extends Statement {
 				perform(ddl);
 			}
 
-			Data data = method.getAnnotation(Data.class);
-			if (data != null) {
-				perform(data);
+			Datas datas = method.getAnnotation(Datas.class);
+			if (datas != null) {
+				perform(datas);
 			}
 
 			// execute test
@@ -88,40 +90,56 @@ public class NimrodDbStatement extends Statement {
 			log.debug("Discovery of a request for script execution : " + value);
 			String sql = Resources.toString(resourceBase.getResource(value), Charset.defaultCharset());
 
-			@Cleanup Connection connection = dataSource.getConnection();
+			@Cleanup
+			Connection connection = dataSource.getConnection();
 
-			@Cleanup java.sql.Statement statement = connection.createStatement();
+			@Cleanup
+			java.sql.Statement statement = connection.createStatement();
 
 			statement.executeQuery(sql);
 			log.debug("End of script execution");
 		}
 	}
 
+	private void perform(Datas datas) throws SQLException, DatabaseUnitException {
+		
+		List<IDataSet> dataSets = new ArrayList<IDataSet>(datas.value().length);
+		for (Data data : datas.value()) {
+			IDataSet dataSet = perform(data);
+			
+			if(dataSet != null)
+				dataSets.add(dataSet);
+		}
+		
+		CompositeDataSet compositeDataSet = new CompositeDataSet(dataSets.toArray(new IDataSet[dataSets.size()]));
+		DatabaseDataSourceConnection databaseDataSourceConnection = new DatabaseDataSourceConnection(dataSource);
+		IDataSet fkDataSet = new FilteredDataSet(new DatabaseSequenceFilter(databaseDataSourceConnection), compositeDataSet);
+		DatabaseOperation.INSERT.execute(databaseDataSourceConnection, fkDataSet);
+		log.debug("Add all datas done.");
+	}
+	
 	/**
-	 * MÃ©thode permettant d'injecter des donnees dans le schema
+	 * Methode permettant d'injecter des donnees dans le schema
 	 * 
 	 * @param data
 	 * @throws DataSetException
 	 * @throws SQLException
 	 * @throws DatabaseUnitException
+	 * @Return IDataSet
 	 */
-	private void perform(Data data) throws SQLException, DatabaseUnitException {
+	private IDataSet perform(Data data) throws SQLException, DatabaseUnitException {
 		log.debug("Discovery of a request to add data");
-		String[] dataSetFiles = data.value();
-		List<IDataSet> dataSets = new ArrayList<IDataSet>(dataSetFiles.length);
-		for (String dataSetFile : dataSetFiles) {
-			log.debug("Add data : " + dataSetFile);
-			IDataSet ds = DataSetStrategy.getImplementation(dataSetFile, resourceBase);
-			dataSets.add(ds);
-		}
-		CompositeDataSet dataSet = new CompositeDataSet(dataSets.toArray(new IDataSet[dataSets.size()]));
-		DatabaseDataSourceConnection databaseDataSourceConnection = new DatabaseDataSourceConnection(dataSource);
-		IDataSet fkDataSet = new FilteredDataSet(new DatabaseSequenceFilter(databaseDataSourceConnection), dataSet);
-		DatabaseOperation.INSERT.execute(databaseDataSourceConnection, fkDataSet);
-		log.debug("Add data done.");
+		String dataSetFile = data.value();
+		//Vous avez oubliez de donnez le fichier à charger.
+		if(dataSetFile == null || dataSetFile.isEmpty())
+			return null;
+		log.debug("Add data : " + dataSetFile);
+		return DataSetStrategy.getImplementation(dataSetFile, resourceBase);
+
 	}
 
 	private void verify(DataExpected dataExpected) throws SQLException, DatabaseUnitException {
+		verifyParameterized(dataExpected);
 		boolean flagFail = false;
 		DatabaseDataSourceConnection databaseDataSourceConnection = new DatabaseDataSourceConnection(dataSource);
 		SortedTable sortedTableActual = new SortedTable(databaseDataSourceConnection.createQueryTable(
@@ -144,11 +162,17 @@ public class NimrodDbStatement extends Statement {
 
 		@SuppressWarnings("unchecked")
 		List<Difference> diffList = diffCollectingHandler.getDiffList();
-		
+
 		diffList.stream().forEach(difference -> log.error(difference));
 
 		if (flagFail) {
 			Assert.fail();
 		}
+	}
+
+	private void verifyParameterized(DataExpected dataExpected) throws DbUnitParameterizedException {
+
+		if (dataExpected.file() == null || dataExpected.file().isEmpty())
+			throw new DbUnitParameterizedException("The file attribute can not be empty.", null);
 	}
 }

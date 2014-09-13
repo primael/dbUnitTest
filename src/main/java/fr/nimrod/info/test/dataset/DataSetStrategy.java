@@ -15,6 +15,6 @@ public interface DataSetStrategy {
 		if(file.endsWith(".xml")) {
 			return new FlatXmlDataSetBuilder().build(resourceBase.getResourceAsStream(file));
 		}
-		throw new IllegalStateException("ged-test ne supporte que le format json et xml... Pour l'instant");
+		throw new IllegalStateException("dbunitTest support only xml and json files.");
 	}
 }
