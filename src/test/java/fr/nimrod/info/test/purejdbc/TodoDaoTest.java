@@ -98,6 +98,49 @@ public class TodoDaoTest {
 		instanceUnderTest.persistTodo(todo);
 	}
 	
+	@Test
+	@Schema({"/jdbc/todo/todo.sql"})
+	@Data("")
+	@Data("/jdbc/todo/todo.json")
+	@DataExpected(file="/jdbc/todo/todo-expected.xml", tableName="todo")
+	public void createTodoWithOneDataEmptyAndOneDataInjectModeJava8() throws SQLException{
+		Todo todo = new Todo();
+		todo.setIdentifiant(1l);
+		todo.setSummary("test");
+		todo.setDescription("test corps");
+		
+		instanceUnderTest.persistTodo(todo);
+	}
+	
+	@Test
+	@Schema({"/jdbc/todo/todo.sql"})
+	@Data("/jdbc/todo/todo.json")
+	@Data("/jdbc/todo/todo.json")
+	@DataExpected(file="/jdbc/todo/todo-expected.xml", tableName="todo")
+	public void createTodoWithInjectTwoSameDataFilesModeJava8() throws SQLException{
+		Todo todo = new Todo();
+		todo.setIdentifiant(1l);
+		todo.setSummary("test");
+		todo.setDescription("test corps");
+		
+		instanceUnderTest.persistTodo(todo);
+	}
+	
+	@Test
+	@Schema({"/jdbc/todo/todo.sql"})
+	@Data("/jdbc/todo/todo.json")
+	@Data("/jdbc/todo/todos.xml")
+	@Data("/jdbc/todo/todo.xml")
+	@DataExpected(file="/jdbc/todo/3todos-expected.json", tableName="todo")
+	public void createTodoWithInjectTwoDataFilesModeJava8() throws SQLException{
+		Todo todo = new Todo();
+		todo.setIdentifiant(1l);
+		todo.setSummary("test");
+		todo.setDescription("test corps");
+		
+		instanceUnderTest.persistTodo(todo);
+	}
+	
 	/*@Test(expected=DbUnitParameterizedException.class)
 	@Schema({"/jdbc/todo/todo.sql"})
 	@DataExpected(file="", tableName="todo")

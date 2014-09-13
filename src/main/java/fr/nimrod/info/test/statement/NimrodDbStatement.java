@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -17,10 +16,7 @@ import org.dbunit.DatabaseUnitException;
 import org.dbunit.assertion.DiffCollectingFailureHandler;
 import org.dbunit.assertion.Difference;
 import org.dbunit.database.DatabaseDataSourceConnection;
-import org.dbunit.database.DatabaseSequenceFilter;
-import org.dbunit.dataset.CompositeDataSet;
 import org.dbunit.dataset.DataSetException;
-import org.dbunit.dataset.FilteredDataSet;
 import org.dbunit.dataset.IDataSet;
 import org.dbunit.dataset.ITable;
 import org.dbunit.dataset.SortedTable;
@@ -61,7 +57,9 @@ public class NimrodDbStatement extends Statement {
 
 			Datas datas = method.getAnnotation(Datas.class);
 			if (datas != null) {
+
 				perform(datas);
+
 			}
 
 			// execute test
@@ -101,24 +99,19 @@ public class NimrodDbStatement extends Statement {
 		}
 	}
 
-	private void perform(Datas datas) throws SQLException, DatabaseUnitException {
-		
-		List<IDataSet> dataSets = new ArrayList<IDataSet>(datas.value().length);
+	private void perform(Datas datas) {
+
 		for (Data data : datas.value()) {
-			IDataSet dataSet = perform(data);
-			
-			if(dataSet != null) {
-				dataSets.add(dataSet);
-			}
+				try {
+					perform(data);
+				} catch (SQLException | DatabaseUnitException e) {
+					log.error("file " + data.value() + " omitted. Problem occur.");
+				}
 		}
 		
-		CompositeDataSet compositeDataSet = new CompositeDataSet(dataSets.toArray(new IDataSet[dataSets.size()]));
-		DatabaseDataSourceConnection databaseDataSourceConnection = new DatabaseDataSourceConnection(dataSource);
-		IDataSet fkDataSet = new FilteredDataSet(new DatabaseSequenceFilter(databaseDataSourceConnection), compositeDataSet);
-		DatabaseOperation.INSERT.execute(databaseDataSourceConnection, fkDataSet);
 		log.debug("Add all datas done.");
 	}
-	
+
 	/**
 	 * Methode permettant d'injecter des donnees dans le schema
 	 * 
@@ -128,15 +121,18 @@ public class NimrodDbStatement extends Statement {
 	 * @throws DatabaseUnitException
 	 * @Return IDataSet
 	 */
-	private IDataSet perform(Data data) throws SQLException, DatabaseUnitException {
+	private void perform(Data data) throws SQLException, DatabaseUnitException {
 		log.debug("Discovery of a request to add data");
 		String dataSetFile = data.value();
-		//Vous avez oubliez de donnez le fichier à charger.
-		if(dataSetFile == null || dataSetFile.isEmpty()) {
-			return null;
+		// Vous avez oubliez de donnez le fichier à charger.
+		if (dataSetFile == null || dataSetFile.isEmpty()) {
+			return;
 		}
 		log.debug("Add data : " + dataSetFile);
-		return DataSetStrategy.getImplementation(dataSetFile, resourceBase);
+		IDataSet dataset = DataSetStrategy.getImplementation(dataSetFile, resourceBase);
+		
+		DatabaseDataSourceConnection databaseDataSourceConnection = new DatabaseDataSourceConnection(dataSource);
+		DatabaseOperation.INSERT.execute(databaseDataSourceConnection, dataset);
 
 	}
 
