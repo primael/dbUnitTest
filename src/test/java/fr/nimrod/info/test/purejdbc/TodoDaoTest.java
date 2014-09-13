@@ -132,6 +132,20 @@ public class TodoDaoTest {
 	@Data("/jdbc/todo/todos.xml")
 	@Data("/jdbc/todo/todo.xml")
 	@DataExpected(file="/jdbc/todo/3todos-expected.json", tableName="todo")
+	public void createTodoWithInjectManyDataFilesModeJava8() throws SQLException{
+		Todo todo = new Todo();
+		todo.setIdentifiant(1l);
+		todo.setSummary("test");
+		todo.setDescription("test corps");
+		
+		instanceUnderTest.persistTodo(todo);
+	}
+	
+	@Test
+	@Schema({"/jdbc/todo/todo.sql"})
+	@Data("/jdbc/todo/todos.xml")
+	@Data("/jdbc/todo/todo.json")
+	@DataExpected(file="/jdbc/todo/3todos-expected.json", tableName="todo")
 	public void createTodoWithInjectTwoDataFilesModeJava8() throws SQLException{
 		Todo todo = new Todo();
 		todo.setIdentifiant(1l);
