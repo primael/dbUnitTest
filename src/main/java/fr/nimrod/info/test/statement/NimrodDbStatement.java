@@ -107,8 +107,9 @@ public class NimrodDbStatement extends Statement {
 		for (Data data : datas.value()) {
 			IDataSet dataSet = perform(data);
 			
-			if(dataSet != null)
+			if(dataSet != null) {
 				dataSets.add(dataSet);
+			}
 		}
 		
 		CompositeDataSet compositeDataSet = new CompositeDataSet(dataSets.toArray(new IDataSet[dataSets.size()]));
@@ -131,8 +132,9 @@ public class NimrodDbStatement extends Statement {
 		log.debug("Discovery of a request to add data");
 		String dataSetFile = data.value();
 		//Vous avez oubliez de donnez le fichier à charger.
-		if(dataSetFile == null || dataSetFile.isEmpty())
+		if(dataSetFile == null || dataSetFile.isEmpty()) {
 			return null;
+		}
 		log.debug("Add data : " + dataSetFile);
 		return DataSetStrategy.getImplementation(dataSetFile, resourceBase);
 
@@ -172,7 +174,8 @@ public class NimrodDbStatement extends Statement {
 
 	private void verifyParameterized(DataExpected dataExpected) throws DbUnitParameterizedException {
 
-		if (dataExpected.file() == null || dataExpected.file().isEmpty())
+		if (dataExpected.file() == null || dataExpected.file().isEmpty()) {
 			throw new DbUnitParameterizedException("The file attribute can not be empty.", null);
+		}
 	}
 }

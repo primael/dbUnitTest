@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 @Target({ ElementType.METHOD })
 public @interface ExceptionExpected {
 
-	Class<? extends Exception> value();
+	Class<Exception> value();
 	
 	
 }
