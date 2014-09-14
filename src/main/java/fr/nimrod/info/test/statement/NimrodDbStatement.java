@@ -69,7 +69,12 @@ public class NimrodDbStatement extends Statement {
 			// ending test
 			DataExpected expected = method.getAnnotation(DataExpected.class);
 			if (expected != null) {
-				verify(expected);
+				try {
+					verify(expected);
+				} catch (SQLException | DatabaseUnitException e) {
+					log.error(e.getMessage(), e);
+					//Assert.fail();
+				}
 			}
 		}
 	}
@@ -102,13 +107,13 @@ public class NimrodDbStatement extends Statement {
 	private void perform(Datas datas) {
 
 		for (Data data : datas.value()) {
-				try {
-					perform(data);
-				} catch (SQLException | DatabaseUnitException e) {
-					log.error("file " + data.value() + " omitted. Problem occur.");
-				}
+			try {
+				perform(data);
+			} catch (SQLException | DatabaseUnitException e) {
+				log.error("file " + data.value() + " omitted. Problem occur.");
+			}
 		}
-		
+
 		log.debug("Add all datas done.");
 	}
 
@@ -130,7 +135,7 @@ public class NimrodDbStatement extends Statement {
 		}
 		log.debug("Add data : " + dataSetFile);
 		IDataSet dataset = DataSetStrategy.getImplementation(dataSetFile, resourceBase);
-		
+
 		DatabaseDataSourceConnection databaseDataSourceConnection = new DatabaseDataSourceConnection(dataSource);
 		DatabaseOperation.INSERT.execute(databaseDataSourceConnection, dataset);
 

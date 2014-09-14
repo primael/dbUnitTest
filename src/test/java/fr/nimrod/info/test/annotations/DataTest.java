@@ -24,5 +24,7 @@ public class DataTest {
 		Assert.assertNotNull("L'annotation n'a pas été trouvés", datas);
 		
 		Assert.assertNotNull("La valeur de l'annotation n'est pas récupérés", datas.value());
+		
+		Assert.assertEquals("Le nombre de sous annotaion ramene n'est pas egal à 1", 1, datas.value().length);
 	}
 }
