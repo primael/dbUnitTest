@@ -2,7 +2,7 @@
 
 	<groupId>fr.nimrod.info</groupId>
 	<artifactId>dbUnitTest</artifactId>
-	<version>1.0</version>
+	<version>1.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<modelVersion>4.0.0</modelVersion>
@@ -104,5 +104,6 @@
 
 	<scm>
 		<developerConnection>scm:git:https://github.com/primael/dbUnitTest.git</developerConnection>
+    <tag>HEAD</tag>
   </scm>
 </project>
