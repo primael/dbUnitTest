@@ -29,8 +29,10 @@ import org.junit.runners.model.Statement;
 import com.google.common.io.Resources;
 
 import fr.nimrod.info.test.annotations.Data;
+import fr.nimrod.info.test.annotations.Data.Phase;
 import fr.nimrod.info.test.annotations.DataExpected;
 import fr.nimrod.info.test.annotations.Datas;
+import fr.nimrod.info.test.annotations.ExceptionExpected;
 import fr.nimrod.info.test.annotations.Schema;
 import fr.nimrod.info.test.dataset.DataSetStrategy;
 import fr.nimrod.info.test.exceptions.DbUnitParameterizedException;
@@ -49,6 +51,11 @@ public class NimrodDbStatement extends Statement {
 
 		try {
 
+			ExceptionExpected exception = method.getAnnotation(ExceptionExpected.class);
+			if(exception != null) {
+				
+			}
+			
 			// test before
 			Schema ddl = method.getAnnotation(Schema.class);
 			if (ddl != null) {
@@ -58,7 +65,7 @@ public class NimrodDbStatement extends Statement {
 			Datas datas = method.getAnnotation(Datas.class);
 			if (datas != null) {
 
-				perform(datas);
+				perform(datas, Phase.BEFORE);
 
 			}
 
@@ -66,6 +73,13 @@ public class NimrodDbStatement extends Statement {
 			base.evaluate();
 
 		} finally {
+			Datas datas = method.getAnnotation(Datas.class);
+			if (datas != null) {
+
+				perform(datas, Phase.AFTER);
+
+			}
+			
 			// ending test
 			DataExpected expected = method.getAnnotation(DataExpected.class);
 			if (expected != null) {
@@ -73,9 +87,9 @@ public class NimrodDbStatement extends Statement {
 					verify(expected);
 				} catch (SQLException | DatabaseUnitException e) {
 					log.error(e.getMessage(), e);
-					//Assert.fail();
 				}
 			}
+			
 		}
 	}
 
@@ -104,11 +118,13 @@ public class NimrodDbStatement extends Statement {
 		}
 	}
 
-	private void perform(Datas datas) {
+	private void perform(Datas datas, Phase phase) {
 
 		for (Data data : datas.value()) {
 			try {
-				perform(data);
+				if(phase.equals(data.phase())) {
+					perform(data);
+				}
 			} catch (SQLException | DatabaseUnitException e) {
 				log.error("file " + data.value() + " omitted. Problem occur.");
 			}

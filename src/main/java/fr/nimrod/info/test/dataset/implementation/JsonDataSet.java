@@ -18,9 +18,9 @@ import lombok.SneakyThrows;
  * DBUnit DataSet format for JSON based datasets. It is similar to the flat XML
  * layout, but has some improvements (columns are calculated by parsing the
  * entire dataset, not just the first row). It uses Jackson, a fast JSON
- * processor. <br/>
- * <br/>
- * The format looks like this: <br/>
+ * processor. <br>
+ * <br>
+ * The format looks like this: <br>
  * 
  * <pre>
  * {
@@ -35,8 +35,8 @@ import lombok.SneakyThrows;
  * }
  * </pre>
  * 
- * <br/>
- * I.e.: <br/>
+ * <br>
+ * I.e.: <br>
  * 
  * <pre>
  * {
