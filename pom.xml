@@ -104,6 +104,5 @@
 
 	<scm>
 		<developerConnection>scm:git:https://github.com/primael/dbUnitTest.git</developerConnection>
-	  <tag>dbUnitTest-1.0</tag>
   </scm>
 </project>
