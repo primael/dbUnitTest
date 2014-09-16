@@ -49,7 +49,7 @@ Annotation permettant l'import d'un script sql (ie. la création d'une table)
  Annotation permettant l'ajout de données.
  
 ```java
- 	@Data({"utilisateur.xml", "role.json"})
+ 	@Data(value={"utilisateur.xml", "role.json"}, phase=Phase.BEFORE)
 ```
 
  @Data prend pour valeur le ou les fichiers de données a chargés. 
