@@ -11,6 +11,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import fr.nimrod.info.test.annotations.Data;
+import fr.nimrod.info.test.annotations.Data.Phase;
 import fr.nimrod.info.test.annotations.DataExpected;
 import fr.nimrod.info.test.annotations.Datas;
 import fr.nimrod.info.test.annotations.Schema;
@@ -153,6 +154,20 @@ public class TodoDaoTest {
 	@Data("/jdbc/todo/todo.json")
 	@DataExpected(file = "/jdbc/todo/3todos-expected.json", tableName = "todo")
 	public void createTodoWithInjectTwoDataFilesModeJava8() throws SQLException {
+		Todo todo = new Todo();
+		todo.setIdentifiant(1l);
+		todo.setSummary("test");
+		todo.setDescription("test corps");
+
+		instanceUnderTest.persistTodo(todo);
+	}
+	
+	@Test
+	@Schema({ "/jdbc/todo/todo.sql" })
+	@Data(value="/jdbc/todo/todos.xml", phase=Phase.BEFORE)
+	@Data(value="/jdbc/todo/todo.json", phase=Phase.AFTER)
+	@DataExpected(file = "/jdbc/todo/3todos-expected.json", tableName = "todo")
+	public void createTodoWithInjectTwoDataFilesBeforeAfter() throws SQLException {
 		Todo todo = new Todo();
 		todo.setIdentifiant(1l);
 		todo.setSummary("test");

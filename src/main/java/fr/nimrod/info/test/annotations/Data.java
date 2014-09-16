@@ -10,7 +10,6 @@ public @interface Data {
 	
 	public enum Phase {
 		BEFORE,
-		DURING,
 		AFTER;
 	}
 }

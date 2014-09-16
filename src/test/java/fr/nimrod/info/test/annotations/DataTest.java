@@ -13,7 +13,7 @@ public class DataTest {
 
 	@Test
 	@Datas({
-		@Data(phase=Phase.DURING, value="test.xml")
+		@Data(phase=Phase.AFTER, value="test.xml")
 	})
 	public void attributeExistance() throws NoSuchMethodException, SecurityException {
 		
