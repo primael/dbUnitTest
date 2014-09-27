@@ -176,15 +176,4 @@ public class TodoDaoTest {
 		instanceUnderTest.persistTodo(todo);
 	}
 
-	/*
-	 * @Test(expected=DbUnitParameterizedException.class)
-	 * 
-	 * @Schema({"/jdbc/todo/todo.sql"})
-	 * 
-	 * @DataExpected(file="", tableName="todo") public void createTodoWithDataExpectedFileEmptyInject() throws
-	 * SQLException{ Todo todo = new Todo(); todo.setIdentifiant(1l); todo.setSummary("test");
-	 * todo.setDescription("test corps");
-	 * 
-	 * instanceUnderTest.persistTodo(todo); }
-	 */
 }
